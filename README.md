@@ -1,58 +1,169 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# ☕ Kopi Kita POS — Cafe & Eatery Point of Sale System
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+[![Laravel](https://img.shields.io/badge/Laravel-11.x-FF2D20?style=for-the-badge&logo=laravel&logoColor=white)](https://laravel.com)
+[![PHP](https://img.shields.io/badge/PHP-8.2%2B-777BB4?style=for-the-badge&logo=php&logoColor=white)](https://php.net)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.x-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com)
+[![Tests](https://img.shields.io/badge/Tests-23%20Passed-success?style=for-the-badge&logo=phpunit&logoColor=white)](tests)
+[![License](https://img.shields.io/badge/License-MIT-blue?style=for-the-badge)](LICENSE)
 
-## About Laravel
+Aplikasi kasir (Point of Sale) modern berbasis web yang dirancang khusus untuk operasional kedai kopi dan restoran. Mengusung arsitektur **Single-Role Cashier**, kalkulasi otomatis pajak restoran PB1 (10%), antarmuka asinkron (AJAX) tanpa reload halaman, dan pengujian fitur terotomatisasi (*Automated Testing* 100% lolos).
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+---
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## 🌟 Fitur Utama
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- **Single-Role Cashier (`kasir`)**: Alur kerja fokus bebas distraksi menu admin atau tombol demo.
+- **Konfigurasi Terpusat (`config/pos.php`)**: Bebas nilai hardcode; pajak PB1, ambang batas stok kritis, dan profil outlet dikendalikan dari satu file konfigurasi.
+- **Terminal Kasir POS Asinkron**:
+  - Keranjang belanja interaktif dengan kalkulasi subtotal, pajak PB1 10%, dan kembalian instan.
+  - Pemotongan stok langsung pada elemen DOM saat checkout tanpa reload.
+  - Validasi pembayaran uang tunai di sisi klien dan server.
+  - Fitur **Hold Order** untuk menahan dan memanggil kembali transaksi pelanggan yang tertunda.
+  - Modal struk belanja otomatis pasca-transaksi dengan opsi cetak dan unduh PDF.
+- **Dashboard Analitik Dinamis**:
+  - 4 Kartu metrik utama (Omzet hari ini, jumlah transaksi, status stok produk, total porsi terlayani).
+  - Grafik *Chart.js* multi-rentang interaktif (Hari Ini per jam, Minggu Ini per hari, Bulan Ini per minggu).
+  - Daftar 5 Menu Terlaris dan 5 Transaksi Terkini.
+- **Manajemen Menu Lengkap (CRUD)**:
+  - Tambah, edit, dan hapus menu dengan unggah foto ke storage lokal.
+  - Ekspor katalog menu ke berkas CSV.
+  - Impor berkas CSV melalui native file picker dengan mekanisme *upsert* otomatis.
+- **Laporan Penjualan & Cetak Struk**:
+  - Riwayat transaksi terurut ketat dari yang paling baru ke paling lama (`DESC`).
+  - Pratinjau struk thermal interaktif (split-view) saat baris riwayat diklik.
+  - Cetak struk printer thermal (58mm/80mm) via browser print CSS.
+  - Streaming cetak PDF struk kasir dan ekspor rekapitulasi laporan (PDF & CSV) menggunakan `barryvdh/laravel-dompdf`.
+- **100% Automated Feature Testing**: 23 pengujian otomatis mencakup autentikasi, dashboard, POS checkout, menu CRUD, dan laporan menggunakan basis data SQLite in-memory.
 
-## Learning Laravel
+---
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## 🛠️ Prasyarat Sistem
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+- **PHP**: >= 8.2 (ekstensi `pdo_mysql`, `sqlite3`, `mbstring`, `openssl`, `gd`)
+- **Composer**: >= 2.x
+- **Basis Data**: MySQL / MariaDB (XAMPP Server)
+- **Web Browser**: Chrome, Firefox, Edge, Safari
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+---
 
-## Agentic Development
+## 🚀 Panduan Instalasi Lokal
 
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
-
+### 1. Kloning Repositori
 ```bash
-composer require laravel/boost --dev
-
-php artisan boost:install
+git clone https://github.com/roidpalih-coder/kopikita.git
+cd kopikita
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+### 2. Instal Dependensi
+```bash
+composer install
+```
 
-## Contributing
+### 3. Konfigurasi Lingkungan (`.env`)
+Salin file `.env.example` menjadi `.env`:
+```bash
+cp .env.example .env
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Pastikan konfigurasi basis data pada `.env` telah sesuai:
+```ini
+APP_NAME="Kopi Kita"
+APP_ENV=local
+APP_TIMEZONE="Asia/Jakarta"
+APP_URL=http://localhost:8000
 
-## Code of Conduct
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=kopi_kita
+DB_USERNAME=root
+DB_PASSWORD=
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+### 4. Generate Key & Storage Link
+```bash
+php artisan key:generate
+php artisan storage:link
+```
 
-## Security Vulnerabilities
+### 5. Migrasi & Seeder Database
+Pastikan MySQL di XAMPP telah aktif dan database `kopi_kita` sudah dibuat:
+```bash
+php artisan migrate:fresh --seed
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### 6. Jalankan Server Pengembangan
+```bash
+php artisan serve
+```
+Buka peramban dan akses: [http://127.0.0.1:8000](http://127.0.0.1:8000)
 
-## License
+---
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+## 🔑 Kredensial Login Kasir
+
+| Parameter | Kredensial |
+|---|---|
+| **Halaman Login** | `http://127.0.0.1:8000/login` |
+| **Username** | `kasir` *(atau `kasir@kopikita.com`)* |
+| **Password** | `kasir123` |
+| **Peran (Role)** | `kasir` |
+
+---
+
+## 🧪 Menjalankan Automated Testing
+
+Sistem dilengkapi automated test suite lengkap yang berjalan di atas SQLite in-memory:
+```bash
+php artisan test
+```
+
+Hasil pengujian:
+```text
+PASS  Tests\Unit\ExampleTest
+PASS  Tests\Feature\AuthTest
+PASS  Tests\Feature\DashboardTest
+PASS  Tests\Feature\ExampleTest
+PASS  Tests\Feature\LaporanTest
+PASS  Tests\Feature\MenuTest
+PASS  Tests\Feature\TransaksiPosTest
+
+Tests:    23 passed (80 assertions)
+Duration: ~1.3s
+```
+
+---
+
+## 📂 Struktur Utama Proyek
+
+```
+kopikita/
+├── app/
+│   ├── Http/Controllers/       # AuthController, DashboardController, MenuController, TransaksiController, LaporanController
+│   └── Models/                 # User, Menu, Transaksi, TransaksiItem
+├── config/
+│   └── pos.php                 # Konfigurasi terpusat (metadata kafe, PB1 10%, batas stok 15)
+├── database/
+│   ├── migrations/             # Skema tabel users, menus, transaksis, transaksi_items
+│   └── seeders/                # Data awal kasir, menu katalog, dan transaksi historis
+├── resources/views/
+│   ├── auth/                   # Form login kasir
+│   ├── dashboard/              # Dashboard analitik & switcher Chart.js
+│   ├── pos/                    # Terminal kasir, keranjang live, hold order, modal bayar
+│   ├── menu/                   # Antarmuka manajemen menu & import/export CSV
+│   └── laporan/                # Split-view riwayat transaksi & template struk thermal PDF
+├── tests/Feature/              # Automated test suites
+└── kopikita.md                 # Dokumentasi arsitektur dan panduan teknis lengkap
+```
+
+---
+
+## 📖 Dokumentasi Lengkap
+
+Panduan menyeluruh mengenai arsitektur perangkat lunak, relasi basis data, snapshot pattern, dan panduan ujian kompetensi tersedia di file [kopikita.md](kopikita.md).
+
+---
+
+## 📄 Lisensi
+
+Proyek ini dilisensikan di bawah lisensi [MIT](LICENSE).
